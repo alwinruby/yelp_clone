@@ -1,9 +1,24 @@
 require 'rails_helper'
 
 feature 'restaurants' do
+  context 'user not signed in' do
+
+    before do
+      Restaurant.create(name: 'KFC')
+    end
+
+    scenario 'user needs to be signed in to manage restaurant details' do
+      visit '/'
+      click_link 'Edit KFC'
+      expect(page).not_to have_content 'Description'
+      expect(page).to have_content 'Email'
+    end
+  end
+
   before do
     sign_up
   end
+
   context 'no restaurants have been added' do
     scenario 'should display a prompt to add restaurants' do
       visit '/restaurants'
