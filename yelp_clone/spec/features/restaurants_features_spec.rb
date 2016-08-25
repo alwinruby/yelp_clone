@@ -8,10 +8,14 @@ feature 'restaurants' do
     end
 
     scenario 'user needs to be signed in to manage restaurant details' do
-      visit '/'
-      click_link 'Edit KFC'
-      expect(page).not_to have_content 'Description'
-      expect(page).to have_content 'Email'
+      visit '/restaurants'
+      click_link 'Add a restaurant'
+      expect(page).not_to have_xpath '//*[@id="new_restaurant"]'
+      expect(page).to have_path '/restaurants/new'
+      # visit '/restaurants'
+      # click_link 'Edit KFC'
+      # # expect(page).not_to have_content 'Sign Out Name Description'
+      # expect(page).to have_content 'Email'
     end
   end
 
