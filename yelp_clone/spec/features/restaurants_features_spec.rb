@@ -1,23 +1,6 @@
 require 'rails_helper'
 
 feature 'restaurants' do
-  context 'user not signed in' do
-
-    before do
-      Restaurant.create(name: 'KFC')
-    end
-
-    scenario 'user needs to be signed in to manage restaurant details' do
-      visit '/restaurants'
-      click_link 'Add a restaurant'
-      expect(page).not_to have_xpath '//*[@id="new_restaurant"]'
-      expect(page).to have_path '/restaurants/new'
-      # visit '/restaurants'
-      # click_link 'Edit KFC'
-      # # expect(page).not_to have_content 'Sign Out Name Description'
-      # expect(page).to have_content 'Email'
-    end
-  end
 
   before do
     sign_up
@@ -44,6 +27,10 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
+    # before do
+    #   sign_up
+    # end
+
     scenario 'should be able to add a restaurant' do
       visit '/restaurants'
       click_link "Add a restaurant"
@@ -53,16 +40,24 @@ feature 'restaurants' do
       expect(page).to have_content "KFC"
     end
 
-    context 'an invalid restaurant' do
-      it 'does not let you submit a name that is too short' do
-        visit '/restaurants'
-        click_link 'Add a restaurant'
-        fill_in 'Name', with: 'kf'
-        click_button 'Create Restaurant'
-        expect(page).not_to have_css 'h2', text: 'kf'
-        expect(page).to have_content 'error'
-      end
+    scenario 'does not let you submit a name that is too short' do
+      visit '/restaurants'
+      click_link 'Add a restaurant'
+      fill_in 'Name', with: 'kf'
+      click_button 'Create Restaurant'
+      expect(page).not_to have_css 'h2', text: 'kf'
+      expect(page).to have_content 'error'
     end
+
+
+    scenario 'if user signed out, they cannot add a new restaurant' do
+      visit '/restaurants'
+      click_link 'Sign Out'
+      expect(page).to have_link "Add a restaurant"
+      click_link "Add a restaurant"
+      expect(page).to have_content "Log in"
+    end
+
   end
 
   context 'viewing restaurants' do
